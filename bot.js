@@ -75,7 +75,7 @@ function getTime(channelIDArg) {
         });
 }
 
-function getURL(urlArg) {                                   //call WarFrame world state page wrapped as a promise
+function getURL(urlArg) {                                           //call WarFrame world state page wrapped as a promise
     return new Promise((resolve, reject) => {
         request.get(urlArg, function (error, response, body) {
             return resolve(body);
