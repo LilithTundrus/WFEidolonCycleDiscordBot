@@ -1,9 +1,8 @@
 //Global vars
 const config = require('./config.js');                              //conifg/auth data
-const ver = '0.0.17';
-const wfURL = 'http://content.warframe.com/dynamic/worldState.php';
+const ver = '0.0.173';
+const wfURL = 'http://content.warframe.com/dynamic/worldState.php'; //warframe world state URL
 var Discord = require('discord.io');                                //discord API wrapper
-var logger = require('winston');                                    //logging
 var request = require('request');                                   //used to make call to WF worldState
 var moment = require('moment');
 var fs = require('fs');                                             //used to read helpNotes.txt
@@ -13,18 +12,9 @@ var os = require('os');                                             //os info li
 var worldState;
 var updateTime;
 var dayCycle;
-var bountyCycle;
 var worldCycle;
 
 //TODO: Add a check for day to night rollover and announce it with a 'happy hunting' message
-
-
-//winston logger stuff
-logger.remove(logger.transports.Console);
-logger.add(logger.transports.Console, {
-    colorize: true
-});
-logger.level = 'debug';
 
 var bot = new Discord.Client({                                      // Initialize Discord Bot with config.token
     token: config.token,
@@ -32,8 +22,8 @@ var bot = new Discord.Client({                                      // Initializ
 });
 
 bot.on('ready', function (evt) {                                    //do some logging and start ensure bot is running
-    logger.info('Connected');
-    logger.info(`Logged in as: ${bot.username} - (${bot.id})`);
+    console.log('Connected to Discord...');
+    console.log(`Logged in as: ${bot.username} - (${bot.id})`);
     bot.setPresence({                                               //make the bot 'play' soemthing
         idle_since: null,
         game: { name: 'Debug Mode' }
