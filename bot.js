@@ -1,6 +1,6 @@
 //Global vars
 const config = require('./config.js');                              //conifg/auth data
-const ver = '0.0.03';
+const ver = '0.0.13';
 const wfURL = 'http://content.warframe.com/dynamic/worldState.php';
 
 var Discord = require('discord.io');                                //discord API wrapper
@@ -71,9 +71,8 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 break;
             case 'time':
                 return getTime(channelID);
-            default:
-                // Do nothing
-                break;
+            case 'cycle':
+                return getDayOrNight(channelID)
             // Just add any case commands here
         }
     }
@@ -84,10 +83,10 @@ function getTime(channelIDArg) {
         .then((wfData) => {
             worldState = JSON.parse(wfData);
             updateTime = (new Date()).getTime();
-            var test = getDayCycle();
+            var message = getDayCycle();
             bot.sendMessage({
                 to: channelIDArg,
-                message: test
+                message: message
             });
         })
 
@@ -119,7 +118,6 @@ function getDayCycle() {
     }
     return dayCycle();
 }
-
 
 function getCurrentCycleSeconds() {
     var cycleSeconds = Math.floor((new Date()).getTime() / 1000 + 780) % 9000; // One cycle = 2.5 hours = 9000 seconds
@@ -154,4 +152,17 @@ function formatDuration(duration){
 	}
 	if(duration.seconds() > 1) {timeText += duration.seconds() + " seconds";} else {timeText += duration.seconds() + " seconds";}
 	return timeText;
+}
+
+function getDayOrNight(channelIDArg) {
+    if (getCurrentCycleSeconds() < 3000) {
+        return bot.sendMessage({
+            to: channelIDArg,
+            message: 'It is currently Night on Cetus'
+        });
+    }
+    return bot.sendMessage({
+        to: channelIDArg,
+        message: 'It is currently Day on Cetus'
+    });
 }
