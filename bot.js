@@ -28,7 +28,7 @@ var bot = new Discord.Client({                                      // Initializ
     autorun: true
 });
 
-bot.on('ready', function (evt) {                                    //do some logging and start the WF data check interval
+bot.on('ready', function (evt) {                                    //do some logging and start ensure bot is running
     logger.info('Connected');
     logger.info(`Logged in as: ${bot.username} - (${bot.id})`);
     bot.setPresence({                                               //make the bot 'play' soemthing
@@ -36,7 +36,6 @@ bot.on('ready', function (evt) {                                    //do some lo
         game: { name: 'Debug Mode' }
     });
 });
-
 
 bot.on('message', function (user, userID, channelID, message, evt) {
     if (message.substring(0, 1) == '~') {                           //listen for messages that will start with `^`
@@ -86,7 +85,7 @@ function getTime(channelIDArg) {
 
 }
 
-function getURL(urlArg) {                                   //call WarFrame world state page
+function getURL(urlArg) {                                   //call WarFrame world state page wrapped as a promise
     return new Promise((resolve, reject) => {
         request.get(urlArg, function (error, response, body) {
             return resolve(body);
@@ -96,7 +95,6 @@ function getURL(urlArg) {                                   //call WarFrame worl
 
 function getDayCycle() {
     if (dayCycle) {
-        //clearInterval(dayCycle);
         dayCycle = null;
     }
     dayCycle = function () {
@@ -104,8 +102,6 @@ function getDayCycle() {
         var cycleSeconds = getCurrentCycleSeconds();
         var duration = moment.duration(secondsLeft * 1000, 'milliseconds');
         duration = moment.duration(duration.asMilliseconds() - 1000, 'milliseconds');
-        //document.getElementById('cycletitle').innerText = getCurrentTitle();
-        //document.getElementById('cycletime').innerText = formatDuration(duration);
         var titleText = getCurrentTitle();
         var formattedDuration = formatDuration(duration);
         return titleText + formattedDuration;
