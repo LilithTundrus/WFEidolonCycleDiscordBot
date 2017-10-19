@@ -1,6 +1,6 @@
 //Global vars
 const config = require('./config.js');                              //conifg/auth data
-const ver = '0.0.15';
+const ver = '0.0.16';
 const wfURL = 'http://content.warframe.com/dynamic/worldState.php';
 var Discord = require('discord.io');                                //discord API wrapper
 var logger = require('winston');                                    //logging
@@ -15,6 +15,9 @@ var updateTime;
 var dayCycle;
 var bountyCycle;
 var worldCycle;
+
+//TODO: Add a check for day to night rollover and announce it with a 'happy hunting' message
+
 
 //winston logger stuff
 logger.remove(logger.transports.Console);
@@ -43,6 +46,11 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         var cmd = args[0];
         args = args.splice(1);
         switch (cmd) {                                              //bot needs to know if it will execute a command
+            case 'statrt':                                          //start the nightTime checker
+            setInterval(function () {
+                test(channelID);
+            }, 60 * 1 * 1000);                                         //10 minutes
+                break;
             case 'panic':                                           //replaces standard bot 'ping' as a test
                 bot.sendMessage({
                     to: channelID,
@@ -154,5 +162,12 @@ function getDayOrNight(channelIDArg) {
     return bot.sendMessage({
         to: channelIDArg,
         message: 'It is currently Day on Cetus'
+    });
+}
+
+function test(channelIDArg) {
+    return bot.sendMessage({
+        to: channelIDArg,
+        message: 'AAAAAAAAAA'
     });
 }
