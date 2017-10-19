@@ -1,4 +1,6 @@
 //Global vars
+'use strict';                                                       //more stringent error reporting for small things
+'esversion: 6';                                                     //specify node 4.0 can't be used
 const config = require('./config.js');                              //conifg/auth data
 const ver = '0.0.177';
 const wfURL = 'http://content.warframe.com/dynamic/worldState.php'; //warframe world state URL
