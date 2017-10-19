@@ -81,15 +81,15 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 
 function getTime(channelIDArg) {
     return getURL(wfURL)
-    .then((wfData) => {
-        worldState = JSON.parse(wfData);
-        updateTime = (new Date()).getTime();
-        getDayCycle();
-        bot.sendMessage({
-            to: channelIDArg,
-            message: `To: ${channelIDArg} the time is ${updateTime}`
-        });
-    })
+        .then((wfData) => {
+            worldState = JSON.parse(wfData);
+            updateTime = (new Date()).getTime();
+            var test = getDayCycle();
+            bot.sendMessage({
+                to: channelIDArg,
+                message: test
+            });
+        })
 
 }
 
@@ -102,16 +102,56 @@ function getURL(urlArg) {                                   //call WarFrame worl
 }
 
 function getDayCycle() {
-	if(dayCycle){
-		clearInterval(dayCycle);
-		dayCycle = null;
+    if (dayCycle) {
+        //clearInterval(dayCycle);
+        dayCycle = null;
+    }
+    dayCycle = function () {
+        var secondsLeft = getSecondsLeft();
+        var cycleSeconds = getCurrentCycleSeconds();
+        var duration = moment.duration(secondsLeft * 1000, 'milliseconds');
+        duration = moment.duration(duration.asMilliseconds() - 1000, 'milliseconds');
+        //document.getElementById('cycletitle').innerText = getCurrentTitle();
+        //document.getElementById('cycletime').innerText = formatDuration(duration);
+        var titleText = getCurrentTitle();
+        var formattedDuration = formatDuration(duration);
+        return titleText + formattedDuration;
+    }
+    return dayCycle();
+}
+
+
+function getCurrentCycleSeconds() {
+    var cycleSeconds = Math.floor((new Date()).getTime() / 1000 + 780) % 9000; // One cycle = 2.5 hours = 9000 seconds
+    return cycleSeconds;
+}
+
+function getCurrentTitle() {
+    if (getCurrentCycleSeconds() < 3000) {
+        return "Time until day: ";
+    }
+    return "Time until night: ";
+}
+
+function getSecondsLeft() {
+	var seconds = getCurrentCycleSeconds();
+	if(seconds < 3000)
+	{
+		return 3000 - seconds;
 	}
-	dayCycle = setInterval(function(){
-		var secondsLeft = getSecondsLeft();
-		var cycleSeconds = getCurrentCycleSeconds();
-		var duration = moment.duration(secondsLeft*1000, 'milliseconds');
-		duration = moment.duration(duration.asMilliseconds() - 1000, 'milliseconds');
-		document.getElementById('cycletitle').innerText = getCurrentTitle();
-		document.getElementById('cycletime').innerText = formatDuration(duration);
-	}, 1000);
+	return 9000 - seconds;
+}
+
+function formatDuration(duration){
+	var timeText = "";
+	if(duration.hours())
+	{
+		if(duration.hours() > 1) {timeText += duration.hours() + " hours ";} else {timeText += duration.hours() + " hour ";}
+	}
+	if(duration.minutes())
+	{
+		if(duration.minutes() > 1) {timeText += duration.minutes() + " minutes ";} else {timeText += duration.minutes() + " minute ";}
+	}
+	if(duration.seconds() > 1) {timeText += duration.seconds() + " seconds";} else {timeText += duration.seconds() + " seconds";}
+	return timeText;
 }
