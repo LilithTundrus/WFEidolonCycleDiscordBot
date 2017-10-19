@@ -14,6 +14,7 @@ var dayCycle;
 var worldCycle;
 
 //TODO: Add a check for day to night rollover and announce it with a 'happy hunting' message
+//TODO: log any messages sent to the bot
 
 var bot = new Discord.Client({                                      // Initialize Discord Bot with config.token
     token: config.token,
@@ -33,6 +34,9 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     if (message.substring(0, 1) == '~') {                           //listen for messages that will start with `^`
         var args = message.substring(1).split(' ');
         var cmd = args[0];
+        //log any messages sent to the bot
+        fs.appendFileSync('discordMessagelog.log', `${user} sent: ${message} at ${Date.now()}`);
+        console.log(`${user} sent: ${message} at ${Date.now()}`);
         args = args.splice(1);
         switch (cmd) {                                              //bot needs to know if it will execute a command
             case 'help':                                            //display the help file
