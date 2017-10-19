@@ -1,17 +1,23 @@
+//Global vars
 var Discord = require('discord.io');                                //discord API wrapper
-var logger = require('winston');                                    //logging -- is this needed?
+var logger = require('winston');                                    //logging
 const config = require('./config.js');                              //conifg/auth data
+var request = require('request');                                   //used to make call to WF worldState
 var fs = require('fs');
 var os = require('os');                                             //os info lib built into node
-const ver = '0.0.02';
+const ver = '0.0.03';
+const wfURL = 'http://content.warframe.com/dynamic/worldState.php';
+var worldState;
+var updateTime;
+
+//winston logger stuff
 logger.remove(logger.transports.Console);
 logger.add(logger.transports.Console, {
     colorize: true
 });
 logger.level = 'debug';
 
-
-var bot = new Discord.Client({                                      // Initialize Discord Bot
+var bot = new Discord.Client({                                      // Initialize Discord Bot with config.token
     token: config.token,
     autorun: true
 });
@@ -66,8 +72,22 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 });
 
 function getTime(channelIDArg) {
-    bot.sendMessage({
-        to: channelIDArg,
-        message: `To: ${channelIDArg} the time is ${new Date().toISOString()}`
-    });
+    return getURL(wfURL)
+    .then((wfData) => {
+        worldState = JSON.parse(wfData);
+        updateTime = (new Date()).getTime();
+        bot.sendMessage({
+            to: channelIDArg,
+            message: `To: ${channelIDArg} the time is ${updateTime}`
+        });
+    })
+
+}
+
+function getURL(urlArg) {                                   //call WarFrame world state page
+    return new Promise((resolve, reject) => {
+        request.get(urlArg, function (error, response, body) {
+            return resolve(body);
+        })
+    })
 }
