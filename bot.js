@@ -1,14 +1,22 @@
 //Global vars
-var Discord = require('discord.io');                                //discord API wrapper
-var logger = require('winston');                                    //logging
 const config = require('./config.js');                              //conifg/auth data
-var request = require('request');                                   //used to make call to WF worldState
-var fs = require('fs');
-var os = require('os');                                             //os info lib built into node
 const ver = '0.0.03';
 const wfURL = 'http://content.warframe.com/dynamic/worldState.php';
+
+var Discord = require('discord.io');                                //discord API wrapper
+var logger = require('winston');                                    //logging
+var request = require('request');                                   //used to make call to WF worldState
+var moment = require('moment');
+var fs = require('fs');
+var os = require('os');                                             //os info lib built into node
+
+
+//Eidolon cycle vars
 var worldState;
 var updateTime;
+var dayCycle;
+var bountyCycle;
+var worldCycle;
 
 //winston logger stuff
 logger.remove(logger.transports.Console);
@@ -76,6 +84,7 @@ function getTime(channelIDArg) {
     .then((wfData) => {
         worldState = JSON.parse(wfData);
         updateTime = (new Date()).getTime();
+        getDayCycle();
         bot.sendMessage({
             to: channelIDArg,
             message: `To: ${channelIDArg} the time is ${updateTime}`
@@ -90,4 +99,19 @@ function getURL(urlArg) {                                   //call WarFrame worl
             return resolve(body);
         })
     })
+}
+
+function getDayCycle() {
+	if(dayCycle){
+		clearInterval(dayCycle);
+		dayCycle = null;
+	}
+	dayCycle = setInterval(function(){
+		var secondsLeft = getSecondsLeft();
+		var cycleSeconds = getCurrentCycleSeconds();
+		var duration = moment.duration(secondsLeft*1000, 'milliseconds');
+		duration = moment.duration(duration.asMilliseconds() - 1000, 'milliseconds');
+		document.getElementById('cycletitle').innerText = getCurrentTitle();
+		document.getElementById('cycletime').innerText = formatDuration(duration);
+	}, 1000);
 }
