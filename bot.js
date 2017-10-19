@@ -1,6 +1,6 @@
 //Global vars
 const config = require('./config.js');                              //conifg/auth data
-const ver = '0.0.173';
+const ver = '0.0.177';
 const wfURL = 'http://content.warframe.com/dynamic/worldState.php'; //warframe world state URL
 var Discord = require('discord.io');                                //discord API wrapper
 var request = require('request');                                   //used to make call to WF worldState
@@ -14,7 +14,6 @@ var dayCycle;
 var worldCycle;
 
 //TODO: Add a check for day to night rollover and announce it with a 'happy hunting' message
-//TODO: log any messages sent to the bot
 
 var bot = new Discord.Client({                                      // Initialize Discord Bot with config.token
     token: config.token,
@@ -34,7 +33,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     if (message.substring(0, 1) == '~') {                           //listen for messages that will start with `^`
         var args = message.substring(1).split(' ');
         var cmd = args[0];
-        //log any messages sent to the bot
+        //log any messages sent to the bot for debugging
         fs.appendFileSync('discordMessagelog.log', `${user} sent: ${message} at ${Date.now()}`);
         console.log(`${user} sent: ${message} at ${Date.now()}`);
         args = args.splice(1);
@@ -55,7 +54,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             case 'time':
                 return getTime(channelID);
             case 'cycle':
-                return getDayOrNight(channelID)
+                return getDayOrNight(channelID);
             // Just add any case commands here -- if you run into random crashes on bad commands, add a defualt handler
         }
     }
@@ -71,16 +70,15 @@ function getTime(channelIDArg) {
                 to: channelIDArg,
                 message: message
             });
-        })
-
+        });
 }
 
 function getURL(urlArg) {                                   //call WarFrame world state page wrapped as a promise
     return new Promise((resolve, reject) => {
         request.get(urlArg, function (error, response, body) {
             return resolve(body);
-        })
-    })
+        });
+    });
 }
 
 function getDayCycle() {
@@ -95,7 +93,7 @@ function getDayCycle() {
         var titleText = getCurrentTitle();
         var formattedDuration = formatDuration(duration);
         return titleText + formattedDuration;
-    }
+    };
     return dayCycle();
 }
 
