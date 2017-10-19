@@ -36,38 +36,19 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         var args = message.substring(1).split(' ');
         var cmd = args[0];
         args = args.splice(1);
-        switch (cmd) {                                      //bot needs to know if it will execute a command
-            case 'panic':                                   //replaces standard bot 'ping' as a test
+        switch (cmd) {                                              //bot needs to know if it will execute a command
+            case 'panic':                                           //replaces standard bot 'ping' as a test
                 bot.sendMessage({
                     to: channelID,
                     message: `**PANICKING**`
                 });
                 break;
-            case 'help':                                    //display the help file (which is configurable)
+            case 'help':                                            //display the help file (which is configurable)
                 let helpMsg = fs.readFileSync('./helpNotes.txt');
                 bot.sendMessage({
                     to: channelID,
                     message: '```' + helpMsg.toString() + '```'
                 });
-                break;
-            case '!EmgStop':                                //stops the bot if user is Lilith Tundrus
-                if (user == config.adminUser) {
-                    bot.sendMessage({
-                        to: channelID,
-                        message: 'SHUTTING DOWN AAAAAAAAA'
-                    });
-                    console.log('Emergency shutdown activated...')
-                    setTimeout(function () {                //used for giving the bot time to send message before exiting
-                        process.exit(0);
-                    }, 2 * 1000);
-                } else {
-                    bot.sendMessage({
-                        to: channelID,
-                        message: 'Not authorized, user will be logged'
-                    });
-                    var errDate = new Date;
-                    fs.appendFileSync('authErrors.log', `${user} attempted to stop the bot at ${errDate}\n`);
-                }
                 break;
             case 'ver':
                 bot.sendMessage({
@@ -76,6 +57,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 });
                 break;
             default:
+            // Do nothing
                 break;
             // Just add any case commands here
         }
