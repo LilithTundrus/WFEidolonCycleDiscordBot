@@ -46,10 +46,10 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         var cmd = args[0];
         args = args.splice(1);
         switch (cmd) {                                              //bot needs to know if it will execute a command
-            case 'statrt':                                          //start the nightTime checker
-            setInterval(function () {
-                test(channelID);
-            }, 60 * 1 * 1000);                                         //10 minutes
+            case 'start':                                          //start the nightTime checker
+                setInterval(function () {
+                    test(channelID);
+                }, 60 * 1 * 1000);                                         //10 minutes
                 break;
             case 'panic':                                           //replaces standard bot 'ping' as a test
                 bot.sendMessage({
@@ -130,26 +130,23 @@ function getCurrentTitle() {
 }
 
 function getSecondsLeft() {
-	var seconds = getCurrentCycleSeconds();
-	if(seconds < 3000)
-	{
-		return 3000 - seconds;
-	}
-	return 9000 - seconds;
+    var seconds = getCurrentCycleSeconds();
+    if (seconds < 3000) {
+        return 3000 - seconds;
+    }
+    return 9000 - seconds;
 }
 
-function formatDuration(duration){
-	var timeText = "";
-	if(duration.hours())
-	{
-		if(duration.hours() > 1) {timeText += duration.hours() + " hours ";} else {timeText += duration.hours() + " hour ";}
-	}
-	if(duration.minutes())
-	{
-		if(duration.minutes() > 1) {timeText += duration.minutes() + " minutes ";} else {timeText += duration.minutes() + " minute ";}
-	}
-	if(duration.seconds() > 1) {timeText += duration.seconds() + " seconds";} else {timeText += duration.seconds() + " seconds";}
-	return timeText;
+function formatDuration(duration) {
+    var timeText = "";
+    if (duration.hours()) {
+        if (duration.hours() > 1) { timeText += duration.hours() + " hours "; } else { timeText += duration.hours() + " hour "; }
+    }
+    if (duration.minutes()) {
+        if (duration.minutes() > 1) { timeText += duration.minutes() + " minutes "; } else { timeText += duration.minutes() + " minute "; }
+    }
+    if (duration.seconds() > 1) { timeText += duration.seconds() + " seconds"; } else { timeText += duration.seconds() + " seconds"; }
+    return timeText;
 }
 
 function getDayOrNight(channelIDArg) {
@@ -164,10 +161,19 @@ function getDayOrNight(channelIDArg) {
         message: 'It is currently Day on Cetus'
     });
 }
+function dayOrNightBool() {
+    if (getCurrentCycleSeconds() < 3000) {
+        return true;
+    }
+    return false;
+}
 
 function test(channelIDArg) {
-    return bot.sendMessage({
-        to: channelIDArg,
-        message: 'AAAAAAAAAA'
-    });
+    if(dayOrNightBool == true) {
+        return bot.sendMessage({
+            to: channelIDArg,
+            message: 'AAAAAAAAAA'
+        });
+    }
+    return;
 }
