@@ -4,7 +4,6 @@ const config = require('./config.js');                              //conifg/aut
 var fs = require('fs');
 var os = require('os');                                             //os info lib built into node
 const ver = '0.0.02';
-console.log('Starting...')
 logger.remove(logger.transports.Console);
 logger.add(logger.transports.Console, {
     colorize: true
@@ -24,7 +23,7 @@ bot.on('ready', function (evt) {                                    //do some lo
     bot.setPresence({                                               //make the bot 'play' soemthing
         idle_since: null,
         game: { name: 'Debug Mode' }
-    })
+    });
     //setInterval(function () {
     //assembleAlertsAlt();
     //}, 600 * 1000);                                               //10 minutes
@@ -56,10 +55,19 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     message: `Version: ${ver} Running on server: ${os.type()} ${os.hostname()} ${os.platform()} ${os.cpus()[0].model}`
                 });
                 break;
+            case 'time':
+                return getTime(channelID);
             default:
-            // Do nothing
+                // Do nothing
                 break;
             // Just add any case commands here
         }
     }
 });
+
+function getTime(channelIDArg) {
+    bot.sendMessage({
+        to: channelIDArg,
+        message: `To: ${channelIDArg} the time is ${new Date().toISOString()}`
+    });
+}
