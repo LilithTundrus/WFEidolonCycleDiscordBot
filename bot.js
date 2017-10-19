@@ -4,10 +4,9 @@ const ver = '0.0.173';
 const wfURL = 'http://content.warframe.com/dynamic/worldState.php'; //warframe world state URL
 var Discord = require('discord.io');                                //discord API wrapper
 var request = require('request');                                   //used to make call to WF worldState
-var moment = require('moment');
+var moment = require('moment');                                     //used for better timekeeping
 var fs = require('fs');                                             //used to read helpNotes.txt
 var os = require('os');                                             //os info lib built into node
-
 //Eidolon cycle vars
 var worldState;
 var updateTime;
