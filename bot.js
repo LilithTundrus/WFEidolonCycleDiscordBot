@@ -1,7 +1,17 @@
-var Discord = require('discord.io');                              //discord API wrapper
+var Discord = require('discord.io');                                //discord API wrapper
+var logger = require('winston');                                    //logging -- is this needed?
 const config = require('./config.js');                              //conifg/auth data
 var fs = require('fs');
 var os = require('os');                                             //os info lib built into node
+const ver = '0.0.02';
+console.log('Starting...')
+logger.remove(logger.transports.Console);
+logger.add(logger.transports.Console, {
+    colorize: true
+});
+logger.level = 'debug';
+
+
 var bot = new Discord.Client({                                      // Initialize Discord Bot
     token: config.token,
     autorun: true
@@ -16,23 +26,17 @@ bot.on('ready', function (evt) {                                    //do some lo
         game: { name: 'Debug Mode' }
     })
     //setInterval(function () {
-        //assembleAlertsAlt();
+    //assembleAlertsAlt();
     //}, 600 * 1000);                                               //10 minutes
 });
 
 
 bot.on('message', function (user, userID, channelID, message, evt) {
-    if (message.substring(0, 1) == '^') {                           //listen for messages that will start with `^`
+    if (message.substring(0, 1) == '~') {                           //listen for messages that will start with `^`
         var args = message.substring(1).split(' ');
         var cmd = args[0];
         args = args.splice(1);
         switch (cmd) {                                      //bot needs to know if it will execute a command
-            case 'give':
-                bot.sendMessage({
-                    to: channelID,
-                    message: `thank you for the ${message.substring(6)}`
-                });
-                break;
             case 'panic':                                   //replaces standard bot 'ping' as a test
                 bot.sendMessage({
                     to: channelID,
