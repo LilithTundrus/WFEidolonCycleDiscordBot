@@ -6,9 +6,8 @@ var Discord = require('discord.io');                                //discord AP
 var logger = require('winston');                                    //logging
 var request = require('request');                                   //used to make call to WF worldState
 var moment = require('moment');
-var fs = require('fs');
+var fs = require('fs');                                             //used to read helpNotes.txt
 var os = require('os');                                             //os info lib built into node
-
 
 //Eidolon cycle vars
 var worldState;
@@ -36,9 +35,6 @@ bot.on('ready', function (evt) {                                    //do some lo
         idle_since: null,
         game: { name: 'Debug Mode' }
     });
-    //setInterval(function () {
-    //assembleAlertsAlt();
-    //}, 600 * 1000);                                               //10 minutes
 });
 
 
@@ -54,11 +50,11 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     message: `**PANICKING**`
                 });
                 break;
-            case 'help':                                            //display the help file (which is configurable)
+            case 'help':                                            //display the help file
                 let helpMsg = fs.readFileSync('./helpNotes.txt');
                 bot.sendMessage({
                     to: channelID,
-                    message: '```' + helpMsg.toString() + '```'
+                    message: '```' + helpMsg.toString() + '```'     //the ``` is there so discord treats it as monospace
                 });
                 break;
             case 'ver':
@@ -71,7 +67,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                 return getTime(channelID);
             case 'cycle':
                 return getDayOrNight(channelID)
-            // Just add any case commands here
+            // Just add any case commands here -- if you run into random crashes on bad commands, add a defualt handler
         }
     }
 });
