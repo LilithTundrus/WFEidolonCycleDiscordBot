@@ -1,8 +1,7 @@
 //Global vars
 const config = require('./config.js');                              //conifg/auth data
-const ver = '0.0.13';
+const ver = '0.0.15';
 const wfURL = 'http://content.warframe.com/dynamic/worldState.php';
-
 var Discord = require('discord.io');                                //discord API wrapper
 var logger = require('winston');                                    //logging
 var request = require('request');                                   //used to make call to WF worldState
@@ -32,8 +31,7 @@ var bot = new Discord.Client({                                      // Initializ
 
 bot.on('ready', function (evt) {                                    //do some logging and start the WF data check interval
     logger.info('Connected');
-    logger.info('Logged in as: ');
-    logger.info(bot.username + ' - (' + bot.id + ')');
+    logger.info(`Logged in as: ${bot.username} - (${bot.id})`);
     bot.setPresence({                                               //make the bot 'play' soemthing
         idle_since: null,
         game: { name: 'Debug Mode' }
