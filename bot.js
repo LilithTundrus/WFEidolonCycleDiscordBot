@@ -1,6 +1,6 @@
 //Global vars
 const config = require('./config.js');                              //conifg/auth data
-const ver = '0.0.16';
+const ver = '0.0.17';
 const wfURL = 'http://content.warframe.com/dynamic/worldState.php';
 var Discord = require('discord.io');                                //discord API wrapper
 var logger = require('winston');                                    //logging
@@ -46,17 +46,6 @@ bot.on('message', function (user, userID, channelID, message, evt) {
         var cmd = args[0];
         args = args.splice(1);
         switch (cmd) {                                              //bot needs to know if it will execute a command
-            case 'start':                                          //start the nightTime checker
-                setInterval(function () {
-                    test(channelID);
-                }, 60 * 1 * 1000);                                         //10 minutes
-                break;
-            case 'panic':                                           //replaces standard bot 'ping' as a test
-                bot.sendMessage({
-                    to: channelID,
-                    message: `**PANICKING**`
-                });
-                break;
             case 'help':                                            //display the help file
                 let helpMsg = fs.readFileSync('./helpNotes.txt');
                 bot.sendMessage({
@@ -161,19 +150,11 @@ function getDayOrNight(channelIDArg) {
         message: 'It is currently Day on Cetus'
     });
 }
+
+//not currently used
 function dayOrNightBool() {
     if (getCurrentCycleSeconds() < 3000) {
         return true;
     }
     return false;
-}
-
-function test(channelIDArg) {
-    if(dayOrNightBool == true) {
-        return bot.sendMessage({
-            to: channelIDArg,
-            message: 'AAAAAAAAAA'
-        });
-    }
-    return;
 }
