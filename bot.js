@@ -1,9 +1,9 @@
-const Discord = require('discord.io');                              //discord API wrapper
+var Discord = require('discord.io');                              //discord API wrapper
 const config = require('./config.js');                              //conifg/auth data
 var fs = require('fs');
 var os = require('os');                                             //os info lib built into node
 var bot = new Discord.Client({                                      // Initialize Discord Bot
-    token: config.toke,
+    token: config.token,
     autorun: true
 });
 
@@ -22,7 +22,7 @@ bot.on('ready', function (evt) {                                    //do some lo
 
 
 bot.on('message', function (user, userID, channelID, message, evt) {
-    if (message.substring(0, 1) == '$') {                   //listen for messages that will start with `!`
+    if (message.substring(0, 1) == '^') {                           //listen for messages that will start with `^`
         var args = message.substring(1).split(' ');
         var cmd = args[0];
         args = args.splice(1);
