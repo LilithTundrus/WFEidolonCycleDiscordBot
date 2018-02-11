@@ -6,16 +6,6 @@ var has_played_night = false;
 var has_played_day = false;
 var first_run = true;
 
-function notify(string) {
-    if (Notification.permission !== "granted")
-        Notification.requestPermission();
-    else {
-        var notification = new Notification('The Eidoclock', {
-            icon: '',
-            body: string
-        });
-    }
-}
 function pad(s) {
     if (s.toString().length == 1) return '0' + s.toString();
     return s.toString();
@@ -49,18 +39,10 @@ function updateTime() {
             if (first_run) {
                 first_run = false;
             } else {
-                notify("It is day!");
+                // notify("It is day!");
             }
         }
         // Time is day
-        if (nice_background) {
-            $('body').css('background', "url(day_blur.jpg) no-repeat center center fixed");
-        } else {
-            $('body').css('background-image', "none");
-            $('body').css('background-color', "black");
-        }
-        $('.day').addClass('night').removeClass('day');
-        $('.night').text('night');
         next_interval = 21;
     } else {
         // Time is night
@@ -70,15 +52,11 @@ function updateTime() {
             if (first_run) {
                 first_run = false;
             } else {
-                notify("It is night!");
-                eidolon_sound.play();
+                // notify("It is night!");
             }
         }
-        $('.night').addClass('day').removeClass('night');
-        $('.day').text('day');
         next_interval = 5;
     }
-    $('body').css('background-size', "cover");
 
     if (eidotime_h == 22) has_notified = false;
     var eido_until_h = next_interval - (eidotime_h % 24);
