@@ -1,14 +1,13 @@
 //Global vars
-'use strict';                                                       //more stringent error reporting for small things
-'esversion: 6';                                                     //specify node 4.0 can't be used
-const config = require('./config.js');                              //conifg/auth data
+'use strict';                                                       // more stringent error reporting for small things
+const config = require('./config.js');                              // conifg/auth data
 const ver = '0.0.205';
-const wfURL = 'http://content.warframe.com/dynamic/worldState.php'; //warframe world state URL
-var Discord = require('discord.io');                                //discord API wrapper
-var request = require('request');                                   //used to make call to WF worldState
-var moment = require('moment');                                     //used for better timekeeping
-var fs = require('fs');                                             //used to read helpNotes.txt
-var os = require('os');                                             //os info lib built into node
+const wfURL = 'http://content.warframe.com/dynamic/worldState.php'; // warframe world state URL
+var Discord = require('discord.io');                                // discord API wrapper
+var request = require('request');                                   // used to make call to WF worldState
+var moment = require('moment');                                     // used for better timekeeping
+var fs = require('fs');                                             // used to read helpNotes.txt
+var os = require('os');                                             // os info lib built into node
 //Eidolon cycle vars
 var worldState;
 var updateTime;
@@ -22,12 +21,13 @@ var bot = new Discord.Client({                                      // Initializ
     autorun: true
 });
 
-bot.on('ready', function (evt) {                                    //do some logging and start ensure bot is running
+console.log('Attempting to connect to Discord')
+bot.on('ready', function (evt) {                                    // do some logging and start ensure bot is running
     console.log('Connected to Discord...');
     console.log(`Logged in as: ${bot.username} - (${bot.id})`);
-    bot.setPresence({                                               //make the bot 'play' soemthing
+    bot.setPresence({                                               // make the bot 'play' soemthing
         idle_since: null,
-        game: { name: 'Debug Mode' }
+        game: { name: 'Warframe' }
     });
 });
 
@@ -75,7 +75,7 @@ function getTime(channelIDArg) {
         });
 }
 
-function getURL(urlArg) {                                           //call WarFrame world state page wrapped as a promise
+function getURL(urlArg) {                                           // call WarFrame world state page wrapped as a promise
     return new Promise((resolve, reject) => {
         request.get(urlArg, function (error, response, body) {
             return resolve(body);
