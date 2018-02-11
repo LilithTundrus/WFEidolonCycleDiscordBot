@@ -8,7 +8,7 @@ var worldCycle;
 
 
 function getWorldState() {
-    $.getJSON('http://www.whateverorigin.org/get?url=' + encodeURIComponent('http://content.warframe.com/dynamic/worldState.php') + '&callback=?', function (data) {
+    $.getJSON(`https://api.warframestat.us/pc`, function (data) {
         worldState = JSON.parse(data.contents);
         updateTime = (new Date()).getTime();
         updatePage();
