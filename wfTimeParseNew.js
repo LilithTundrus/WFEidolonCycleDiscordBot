@@ -9,6 +9,7 @@ function pad(s) {
 }
 
 function updateTime() {
+    var untilDayOrNightVar;
     var d = new Date();
     var time = d.getTime() / 1000;
     // This time is the end of night and start of day
@@ -32,12 +33,13 @@ function updateTime() {
     if (150 - irltime_m > 50) {
         // Time is day
         next_interval = 21;
+        untilDayOrNightVar = 'Night';
     } else {
         // Time is night
         next_interval = 5;
+        untilDayOrNightVar = 'Day';
     }
 
-    // if (eidotime_h == 22) has_notified = false;
     var eido_until_h = next_interval - (eidotime_h % 24);
     if (eido_until_h < 0) eido_until_h += 24
     var eido_until_m = 60 - eidotime_m;
@@ -53,17 +55,20 @@ function updateTime() {
     var irl_until_m = Math.floor(irl_until_in_m % 60);
     var irl_until_s = Math.floor((irl_until_in_m * 60) % 60);
 
-    $('.time>.big-hour').text(pad(irl_until_h));
-    $('.time>.big-minute').text(pad(irl_until_m));
-    $('.time>.big-second').text(pad(irl_until_s));
-
-    $('.eidolon .hour').text(pad(eidotime_h));
-    $('.eidolon .minute').text(pad(eidotime_m));
-    $('.eidolon .second').text(pad(eidotime_s));
-
-    $('.irl .hour').text(pad(eido_until_h));
-    $('.irl .minute').text(pad(eido_until_m));
-    $('.irl .second').text(pad(eido_until_s));
+    /*     $('.time>.big-hour').text(pad(irl_until_h));
+        $('.time>.big-minute').text(pad(irl_until_m));
+        $('.time>.big-second').text(pad(irl_until_s));
+    
+        $('.eidolon .hour').text(pad(eidotime_h));
+        $('.eidolon .minute').text(pad(eidotime_m));
+        $('.eidolon .second').text(pad(eidotime_s));
+    
+        $('.irl .hour').text(pad(eido_until_h));
+        $('.irl .minute').text(pad(eido_until_m));
+        $('.irl .second').text(pad(eido_until_s)); */
+    return `${irl_until_h}h ${irl_until_m}m ${irl_until_s}s until ${untilDayOrNightVar}`;
 }
 
-var interval = setInterval(updateTime, 1);
+// var interval = setInterval(updateTime, 1);
+
+module.exports.updateTime = updateTime;
