@@ -3,13 +3,10 @@ var has_played_night = false;
 var has_played_day = false;
 var first_run = true;
 
-function pad(s) {
-    if (s.toString().length == 1) return '0' + s.toString();
-    return s.toString();
-}
 
 function updateTime() {
-    var untilDayOrNightVar;
+    var untilCycle;
+    var currentCycle;
     var d = new Date();
     var time = d.getTime() / 1000;
     // This time is the end of night and start of day
@@ -33,11 +30,14 @@ function updateTime() {
     if (150 - irltime_m > 50) {
         // Time is day
         next_interval = 21;
-        untilDayOrNightVar = 'Night';
+        currentCycle = 'Day'
+        untilCycle = 'Night';
+
     } else {
         // Time is night
         next_interval = 5;
-        untilDayOrNightVar = 'Day';
+        currentCycle = 'Night';
+        untilCycle = 'Day';
     }
 
     var eido_until_h = next_interval - (eidotime_h % 24);
@@ -55,20 +55,9 @@ function updateTime() {
     var irl_until_m = Math.floor(irl_until_in_m % 60);
     var irl_until_s = Math.floor((irl_until_in_m * 60) % 60);
 
-    /*     $('.time>.big-hour').text(pad(irl_until_h));
-        $('.time>.big-minute').text(pad(irl_until_m));
-        $('.time>.big-second').text(pad(irl_until_s));
-    
-        $('.eidolon .hour').text(pad(eidotime_h));
-        $('.eidolon .minute').text(pad(eidotime_m));
-        $('.eidolon .second').text(pad(eidotime_s));
-    
-        $('.irl .hour').text(pad(eido_until_h));
-        $('.irl .minute').text(pad(eido_until_m));
-        $('.irl .second').text(pad(eido_until_s)); */
-    return `${irl_until_h}h ${irl_until_m}m ${irl_until_s}s until ${untilDayOrNightVar}`;
+
+    return `It is ccurently ${currentCycle}. \n\n${irl_until_h}h ${irl_until_m}m ${irl_until_s}s until ${untilCycle}.`;
 }
 
-// var interval = setInterval(updateTime, 1);
-
+// Export the function
 module.exports.updateTime = updateTime;
