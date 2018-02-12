@@ -1,8 +1,7 @@
 'use strict';                                                       // more stringent error reporting for small things
 const config = require('./config.js');                              // conifg/auth data
-const ver = '0.0.205';
-const wfURL = 'http://content.warframe.com/dynamic/worldState.php'; // warframe world state URL
-let parser = require('./wfTimeParseNew');
+const ver = '1.0.0';
+let parser = require('./wfTimeParseNew');                           // module to get the Discord message for ~time
 var Discord = require('discord.io');                                // discord API wrapper
 var fs = require('fs');                                             // used to read helpNotes.txt
 var os = require('os');                                             // os info lib built into node
@@ -23,19 +22,19 @@ bot.on('ready', function (evt) {                                    // do some l
 });
 
 bot.on('message', function (user, userID, channelID, message, evt) {
-    if (message.substring(0, 1) == '~') {                           //listen for messages that will start with `^`
+    if (message.substring(0, 1) == '~') {                           // listen for messages that will start with `~`
         var args = message.substring(1).split(' ');
         var cmd = args[0];
-        //log any messages sent to the bot for debugging
+        // log any messages sent to the bot for debugging
         fs.appendFileSync('discordMessagelog.log', `${user} sent: ${message} at ${Date.now()}`);
         console.log(`${user} sent: ${message} at ${Date.now()}`);
         args = args.splice(1);
-        switch (cmd) {                                              //bot needs to know if it will execute a command
-            case 'help':                                            //display the help file
+        switch (cmd) {                                              // bot needs to know if it will execute a command
+            case 'help':                                            // display the help file
                 let helpMsg = fs.readFileSync('./helpNotes.txt');
                 bot.sendMessage({
                     to: channelID,
-                    message: '```' + helpMsg.toString() + '```'     //the ``` is there so discord treats it as monospace
+                    message: '```' + helpMsg.toString() + '```'     // the ``` is there so discord treats it as monospace
                 });
                 break;
             case 'ver':
@@ -50,8 +49,9 @@ bot.on('message', function (user, userID, channelID, message, evt) {
     }
 });
 
+// This will send the message after the parser creates the string
 function getTime(channelIDArg) {
-    var message = parser.updateTime()
+    var message = parser.updateTime();
     bot.sendMessage({
         to: channelIDArg,
         message: message
