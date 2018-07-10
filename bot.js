@@ -1,27 +1,31 @@
-'use strict';                                                       // more stringent error reporting for small things
-const config = require('./config.js');                              // conifg/auth data
-const ver = '1.0.1';
-let parser = require('./wfTimeParseNew');                           // module to get the Discord message for ~time
-var Discord = require('discord.io');                                // discord API wrapper
-var fs = require('fs');                                             // used to read helpNotes.txt
-var os = require('os');                                             // os info lib built into node
+'use strict';
 
-var bot = new Discord.Client({                                      // Initialize Discord Bot with config.token
-    token: config.token,
-    autorun: true
+// Config file that has the private variables needed
+const config = require('./config.js');
+const ver = '2.0.0';
+
+// This is 
+let parser = require('./wfTimeParseNew');
+
+
+// Node requires
+var fs = require('fs');
+var os = require('os');
+
+// Initialize the Discord bot using discord.js
+const Discord = require('discord.js');
+const client = new Discord.Client();
+
+client.login(config.token);
+
+client.on('ready', () => {
+    console.log(`Connected to Discord.\nLogged in as ${client.user.username} (${client.user.id})`);
+
+    client.user.setActivity(`Warframe (Cetus - Level 10-30)`);
 });
 
-console.log('Attempting to connect to Discord')
-bot.on('ready', function (evt) {                                    // do some logging and start ensure bot is running
-    console.log('Connected to Discord...');
-    console.log(`Logged in as: ${bot.username} - (${bot.id})`);
-    bot.setPresence({                                               // make the bot 'play' soemthing
-        idle_since: null,
-        game: { name: 'Warframe' }
-    });
-});
 
-bot.on('message', function (user, userID, channelID, message, evt) {
+bot.on('message', function(user, userID, channelID, message, evt) {
     if (message.substring(0, 1) == '~') {                           // listen for messages that will start with `~`
         var args = message.substring(1).split(' ');
         var cmd = args[0];
