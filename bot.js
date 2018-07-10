@@ -23,7 +23,7 @@ client.on('ready', () => {
     // Set the topic change timer
     setInterval(() => {
         changeTimeTopic();
-    }, 5 * 60000);
+    }, 1 * 60000);
 
     // Set the bot to be 'playing' a game
     client.user.setActivity(`Warframe (Cetus - Level 10-30)`);
