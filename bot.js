@@ -4,9 +4,8 @@
 const config = require('./config.js');
 const ver = '2.0.0';
 
-// This is 
+// This is the custom parser to get the current time cycle on Cetus
 let parser = require('./wfTimeParseNew');
-
 
 // Node requires
 var fs = require('fs');
@@ -21,10 +20,14 @@ client.login(config.token);
 client.on('ready', () => {
     console.log(`Connected to Discord.\nLogged in as ${client.user.username} (${client.user.id})`);
 
+    // Set the topic change timer
+    setInterval(() => {
+        changeTimeTopic();
+    }, 5 * 60000);
+
     // Set the bot to be 'playing' a game
     client.user.setActivity(`Warframe (Cetus - Level 10-30)`);
 });
-
 
 client.on('message', async message => {
     let prefix = '~';
@@ -69,5 +72,22 @@ function getTime(channelIDArg) {
         .then((response) => {
             let discordChannel = client.channels.get(channelIDArg);
             discordChannel.send(response);
+        })
+        .catch((err) => {
+            discordChannel.setTopic('Could not fetch Cetus time.');
+            console.log(err);
+        })
+}
+
+// Change the topic of the TS server to show the current time (this doesn't work for mnore than 1 server right now)
+function changeTimeTopic() {
+    let discordChannel = client.channels.get(config.channelID);
+    parser.updateTime()
+        .then((response) => {
+            discordChannel.setTopic(response);
+        })
+        .catch((err) => {
+            discordChannel.setTopic('Could not fetch Cetus time.');
+            console.log(err);
         })
 }
