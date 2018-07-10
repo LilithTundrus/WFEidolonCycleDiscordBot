@@ -80,7 +80,11 @@ function updateTime() {
             let irl_until_m = Math.floor(irl_until_in_m % 60);
             let irl_until_s = Math.floor((irl_until_in_m * 60) % 60);
 
-            return `It is ccurently ${currentCycle}. \n\n${irl_until_h}h ${irl_until_m}m ${irl_until_s}s until ${untilCycle}.`;
+            let timeOfDayEmoji = '';
+            if (currentCycle == 'Night') timeOfDayEmoji = ':crescent_moon: ';
+            else timeOfDayEmoji = ':sunny:';
+            
+            return `It is ccurently ${timeOfDayEmoji} (${currentCycle}) on Cetus. \n\n${irl_until_h}h ${irl_until_m}m ${irl_until_s}s until ${untilCycle}.`;
         })
 }
 
