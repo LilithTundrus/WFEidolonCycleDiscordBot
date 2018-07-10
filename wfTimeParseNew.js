@@ -1,5 +1,4 @@
 'use strict';
-
 // Using this for getting the URL to parse
 const request = require('request-promise');
 
